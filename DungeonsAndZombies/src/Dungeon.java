@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Dungeon {
+	static Hero hero;
 	static List<Spell> spells;
 	static List<Weapon> weapons;
 	List<Enemy> enemies;
@@ -45,7 +46,7 @@ public class Dungeon {
 		return false;
 	}
 
-	void checkCurrentHeroSquare(Hero hero, int row, int col) {
+	void checkCurrentHeroSquare(int row, int col) {
 		// If level gate found
 		if (mapLevel[row][col] == 'G') {
 			isCompleted = true;
@@ -85,7 +86,7 @@ public class Dungeon {
 			case "u":
 				if (heroRow != 0 && mapLevel[heroRow - 1][heroCol] != '#') {
 					changePathAfterHero();
-					checkCurrentHeroSquare(hero, --heroRow, heroCol);
+					checkCurrentHeroSquare( --heroRow, heroCol);
 					markCurrentHeroSquare();
 					hero.takeMana(hero.getManaRegenerationRate());
 				}
@@ -93,7 +94,7 @@ public class Dungeon {
 			case "d":
 				if (heroRow != mapLevel.length - 1 && mapLevel[heroRow + 1][heroCol] != '#') {
 					changePathAfterHero();
-					checkCurrentHeroSquare(hero, ++heroRow, heroCol);
+					checkCurrentHeroSquare(++heroRow, heroCol);
 					markCurrentHeroSquare();
 					hero.takeMana(hero.getManaRegenerationRate());
 				}
@@ -101,7 +102,7 @@ public class Dungeon {
 			case "r":
 				if (heroCol != mapLevel[1].length - 1 && mapLevel[heroRow][heroCol + 1] != '#') {
 					changePathAfterHero();
-					checkCurrentHeroSquare(hero, heroRow, ++heroCol);
+					checkCurrentHeroSquare(heroRow, ++heroCol);
 					markCurrentHeroSquare();
 					hero.takeMana(hero.getManaRegenerationRate());
 				}
@@ -109,7 +110,7 @@ public class Dungeon {
 			case "l":
 				if (heroCol != 0 && mapLevel[heroRow][heroCol - 1] != '#') {
 					changePathAfterHero();
-					checkCurrentHeroSquare(hero, heroRow, --heroCol);
+					checkCurrentHeroSquare(heroRow, --heroCol);
 					markCurrentHeroSquare();
 					hero.takeMana(hero.getManaRegenerationRate());
 				}
@@ -121,7 +122,7 @@ public class Dungeon {
 					System.out.println("You drank 1 mana potion: + 30 mana. Your current mana is: " + hero.getMana()
 							+ ". You have " + hero.getManaPotion() + " mana potions left");
 				} else {
-					System.out.println("You dont't have any mana potions!");
+					System.out.println("You dont't have any mana potions! Mana ="+hero.getMana());
 				}
 				break;
 			case "h":
@@ -131,7 +132,7 @@ public class Dungeon {
 					System.out.println("You drank 1 health potion: + 30 HP. Your current HP is: " + hero.getHealth()
 							+ ". You have " + hero.getHealthPotion() + " HP potions left");
 				} else {
-					System.out.println("You dont't have any health potions!");
+					System.out.println("You dont't have any health potions! HP ="+hero.getHealth());
 				}
 				break;
 			default:
@@ -233,7 +234,7 @@ public class Dungeon {
 
 	public void generateListOfEnemies() {
 		Enemy darthVader = new Enemy("Darth Vader", "The bad guy", 100, 70, new Sword());
-		Enemy jabba = new Enemy("Jabba", "Fat Frog", 80, 60, new Gun());
+		Enemy jabba = new Enemy("Jabba", "Fatty Frog", 80, 60, new Gun());
 		Enemy darthMaul = new Enemy("Darth Maul", "The bad guy", 90, 50, new Axe());
 		Enemy general = new Enemy("General Hux", "The General", 100, 50, new Bow());
 
@@ -257,19 +258,20 @@ public class Dungeon {
 	public static void main(String[] args) {
 		genereateListOfSpells();
 		generateListOfWeapons();
+		hero = new Hero("Luke", "Skywalker", 130, 100, 2);
+		
 		System.out.println("Enter movement direction: u, d, l, r");
 		System.out.println("Drink health or mana potion: h , m");
 
 		try (Scanner input = new Scanner(System.in)) {
 
 			while (gameIsRunnig && ReadLevelFromTextFile.hasNextLevel) {
-				System.out.println("Stage " + stageNumber);
+				System.out.println("Stage " + stageNumber+"\nHero status: HP -> "+hero.getHealth()+", Mana -> "+hero.getMana());
 				ReadLevelFromTextFile level = new ReadLevelFromTextFile();
 				level.readTextFile();
 				Dungeon stage = new Dungeon(level.getCurrentStage());
 				stage.generateListOfEnemies();
 
-				Hero hero = new Hero("Luke", "Skywalker", 100, 100, 2);
 				stage.spawn();
 				stage.printMap();
 
@@ -277,7 +279,6 @@ public class Dungeon {
 					String direction = input.nextLine();
 					stage.moveHero(hero, direction);
 					stage.printMap();
-					System.out.println("Mana:" + hero.getMana());
 				}
 
 				if (hero.isAlive()) {
