@@ -104,19 +104,20 @@ public abstract class Character {
 		return hitPoints;
 	}
 
+	//Autocombat
 	public int attack() {
 		int hitPoints = 0;
 
 		// Try to auto attack with the strongest spell/weapon
-		if (hasSpell && hasWeapon) {
-			if (spell.getManaCost() < getMana() && (weapon.getDamage() < spell.getDamage())) {
+		if (canCast() && hasWeapon) {
+			if (weapon.getDamage() < spell.getDamage()) {
 				hitPoints = attack(spell);
 				System.out.println(this.knownAs() + " attacks with " + this.spell);
 			} else {
 				hitPoints = attack(weapon);
 				System.out.println(this.knownAs() + " attacks with " + this.weapon);
 			}
-		} else if (hasSpell && spell.getManaCost() < getMana()) {
+		} else if (canCast()) {
 			hitPoints = attack(spell);
 			System.out.println(this.knownAs() + " attacks with " + this.spell);
 		} else if (hasWeapon) {
@@ -130,10 +131,12 @@ public abstract class Character {
 		return hitPoints;
 	}
 
+	//TODO manually choose to attack by weapon
 	public int attack(Weapon byWeapon) {
 		return byWeapon.getDamage();
 	}
 
+	//TODO manually choose to attack by spell
 	public int attack(Spell bySpell) {
 		setMana(getMana() - bySpell.getManaCost());
 		return bySpell.getDamage();
