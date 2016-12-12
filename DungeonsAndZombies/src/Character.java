@@ -87,8 +87,8 @@ public abstract class Character {
 		hasWeapon = true;
 	}
 
-	// Try to attack from distance with
-	// TODO obsticles, enemy movement, count squares distance
+	// TODO Try to attack from distance with
+	//  obsticles, enemy movement, count tiles distance
 	public int tryManualAttack(String weaponOrSpell) {
 		int hitPoints = 0;
 		try {
