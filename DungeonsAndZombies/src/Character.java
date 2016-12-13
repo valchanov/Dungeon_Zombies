@@ -47,12 +47,12 @@ public abstract class Character {
 	}
 
 	public boolean canCast() {
-		// TODO check it
-		if (mana < 1) {
-			return false;
+		boolean canCast = false;
+		if (hasSpell && spell.getManaCost() < getMana()) {
+			canCast = true;
 		}
 
-		return true;
+		return canCast;
 	}
 
 	public void takeDamage(int damagePoints) {
@@ -70,7 +70,6 @@ public abstract class Character {
 	}
 
 	public void takeMana(int manaPoints) {
-		// 2 ways to increase it!!!
 		mana += manaPoints;
 		if (mana > maxMana) {
 			mana = maxMana;
