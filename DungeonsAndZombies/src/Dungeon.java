@@ -80,7 +80,7 @@ public class Dungeon {
 		mapLevel[heroRow][heroCol] = '.';
 	}
 
-	void moveHero(Hero hero, String direction) {
+	void moveHero(String direction) {
 		try {
 			switch (direction) {
 			case "u":
@@ -277,7 +277,7 @@ public class Dungeon {
 
 				while (hero.isAlive() && !stage.isCompleted) {
 					String direction = input.nextLine();
-					stage.moveHero(hero, direction);
+					stage.moveHero(direction);
 					stage.printMap();
 				}
 
