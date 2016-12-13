@@ -1,6 +1,6 @@
 
 public class Axe extends Weapon {
-	прижате Axe() {
+	private Axe() {
 		super("Axe", 15, 0);
 	}
 
